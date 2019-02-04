@@ -1,0 +1,17 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/rust:1.32-stretch
+      - image: redis:4-stretch
+    steps:
+      - checkout
+      - run: rustup component add rustfmt clippy
+      - run: cargo fmt -- --check
+      - run: cargo clippy
+      - run: cargo test --verbose
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
