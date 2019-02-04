@@ -1,19 +1,19 @@
-extern crate redis_async;
 extern crate actix_redis;
 extern crate actix_web;
-extern crate mdo;
 extern crate futures;
+extern crate mdo;
 extern crate mdo_future;
 extern crate redis;
+extern crate redis_async;
 
 use actix_redis::{Command, RedisActor, RespValue};
-use redis_async::resp_array;
 use actix_web::error::ErrorInternalServerError;
 use actix_web::middleware::{Middleware, Started};
 use actix_web::HttpRequest;
 use futures::{Future, IntoFuture};
 use mdo::mdo;
 use mdo_future::future::{bind, ret};
+use redis_async::resp_array;
 use std::rc::Rc;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
