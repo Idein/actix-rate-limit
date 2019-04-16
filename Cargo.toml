@@ -6,9 +6,12 @@ edition = "2018"
 
 [dependencies]
 actix-web = "0.7"
-actix-redis = "*"
+actix-redis = { git = "https://github.com/Idein/actix-redis-cluster.git", branch = "master" }
 redis-async = "*"
 redis = "0.9.1"
 mdo = "0.3"
 mdo-future = "0.2"
 futures = "0.1"
+
+[dev-dependencies]
+actix-rate-limit-test = { path = "test-server" }

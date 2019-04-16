@@ -6,10 +6,11 @@ extern crate mdo_future;
 extern crate redis;
 extern crate redis_async;
 
-use actix_redis::{Command, RedisActor, RespValue};
+use actix_redis::{command, RedisActor, RespValue};
 use actix_web::error::ErrorInternalServerError;
 use actix_web::middleware::{Middleware, Started};
 use actix_web::HttpRequest;
+use command::Command;
 use futures::{Future, IntoFuture};
 use mdo::mdo;
 use mdo_future::future::{bind, ret};
@@ -96,17 +97,32 @@ impl<S: 'static> Middleware<S> for LeakyBucket<S> {
         let script_hash = self.script_hash.clone();
 
         let fut = mdo! {
-            let v = resp_array![
-                "EVALSHA",
-                script_hash,
-                1.to_string(),
-                key,
-                burst_tolerance.to_string(),
-                access_interval_msec.to_string(),
-                epoch_ms.to_string()
-            ];
-            let command = Command(v);
-            resp =<< redis.send(command).map_err(Into::into);
+            let eval_sha_command = command::EvalSha {
+                    hash: script_hash,
+                    keys: vec![key.into()],
+                    args: vec![
+                        burst_tolerance.to_string().into(),
+                        access_interval_msec.to_string().into(),
+                        epoch_ms.to_string().into(),
+                    ],
+                };
+
+            _ =<< mdo! {
+                //ensure script loaded
+                //TODO: send request only if the script is not loaded
+                let slot = eval_sha_command.key_slot().unwrap().unwrap();
+                let script_load_command = command::ScriptLoad {
+                    script: LUA_SCRIPT,
+                    slot,
+                };
+                resp =<< redis.send(script_load_command).map_err(Into::into);
+                ret match resp {
+                    Ok(_) => Ok(()).into_future(),
+                    Err(e) => Err(ErrorInternalServerError(format!("redis:  {:?}", e))).into_future(),
+                }
+            };
+
+            resp =<< redis.send(eval_sha_command).map_err(Into::into);
             ret match resp {
                 Ok(RespValue::Integer(n)) =>
                     if n == 0 {

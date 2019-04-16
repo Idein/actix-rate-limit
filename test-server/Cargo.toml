@@ -1,0 +1,8 @@
+[package]
+name = "actix-rate-limit-test"
+version = "0.1.0"
+authors = ["Kazuhiro Kobayashi <orihuzakihsayabok@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+actix-web = "0.7"
