@@ -92,8 +92,7 @@ impl<S: 'static> Middleware<S> for LeakyBucket<S> {
         let epoch_ms: usize = epoch.as_secs() as usize * 1000 + epoch.subsec_millis() as usize;
 
         let redis = self.redis.clone();
-        let id = (self.identify)(req.clone())?;
-        let key = format!("ratelimit:id:{}", id);
+        let key = (self.identify)(req.clone())?;
         let script_hash = self.script_hash.clone();
 
         let fut = mdo! {

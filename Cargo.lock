@@ -55,7 +55,6 @@ dependencies = [
 name = "actix-rate-limit"
 version = "0.1.0"
 dependencies = [
- "actix-rate-limit-test 0.1.0",
  "actix-redis 0.5.1 (git+https://github.com/Idein/actix-redis-cluster.git)",
  "actix-web 0.7.19 (registry+https://github.com/rust-lang/crates.io-index)",
  "futures 0.1.26 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -63,13 +62,6 @@ dependencies = [
  "mdo-future 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "redis 0.9.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "redis-async 0.4.4 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "actix-rate-limit-test"
-version = "0.1.0"
-dependencies = [
- "actix-web 0.7.19 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

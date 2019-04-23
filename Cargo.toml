@@ -12,6 +12,3 @@ redis = "0.9.1"
 mdo = "0.3"
 mdo-future = "0.2"
 futures = "0.1"
-
-[dev-dependencies]
-actix-rate-limit-test = { path = "test-server" }
